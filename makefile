@@ -3,7 +3,7 @@ CC = clang
 CXX = clang++
 RM = rm -f
 
-CXXFLAGS = --std=c++11 -g -O3 -MMD -MP -Wall -pedantic
+CXXFLAGS = --std=c++11 -g -O3 -pthread -MMD -MP -Wall -pedantic
 CPPFLAGS = -I/usr/local/include
 LDFLAGS = -L/usr/local/lib
 LDLIBS =
