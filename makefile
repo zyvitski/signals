@@ -3,13 +3,14 @@ CC = clang
 CXX = clang++
 RM = rm -f
 
-CXXFLAGS = --std=c++11 -pthread -g -O3 -MMD -MP -Wall -pedantic
+CXXFLAGS = --std=c++11 -g -O3 -MMD -MP -Wall -pedantic
 CPPFLAGS = -I/usr/local/include
-LDFLAGS = -L/usr/local/lib -L/usr/local/lib/boost
+LDFLAGS = -L/usr/local/lib
 LDLIBS =
 
 INSTALL_DIR = /usr/local/bin
 
+HEADERS = $(wildcard *.hpp)
 SRCS = $(wildcard *.cpp)
 OBJS = $(subst .cpp,.o,$(SRCS))
 DEPS = $(subst .cpp,.d,$(SRCS))
