@@ -1,3 +1,3 @@
-# signals [![Build Status](https://travis-ci.org/zyvitski/signals.svg?branch=master)](https://travis-ci.org/zyvitski/signals)
+# signals https://travis-ci.org/zyvitski/signals.svg?branch=master
 
 A Signals and Slots implementation using C++11
