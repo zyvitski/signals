@@ -1,10 +1,4 @@
-//
-//  thread_pool.hpp
-//  playground
-//
-//  Created by Alexander zywicki on 11/5/16.
-//  Copyright © 2016 Alexander zywicki. All rights reserved.
-//
+
 
 #ifndef thread_pool_h
 #define thread_pool_h
@@ -25,10 +19,10 @@ class basic_thread_pool
     using function_wrapper_type = std::function<void()>;
     using queue_type = queue_t<function_wrapper_type,allocator_t<function_wrapper_type>>;
 public:
-    
+
     using size_type = std::size_t;
-    
-    
+
+
     explicit basic_thread_pool(size_type threads = std::thread::hardware_concurrency(),
                                bool should_finish_work=true) :_workers(threads),
                                                               _should_finish_before_exit(should_finish_work),
@@ -39,18 +33,18 @@ public:
             thrd = std::thread(thread_init());
         }
     }
-    
+
     ~basic_thread_pool()
     {
         //clear all work if we dont need to do it before exit
         if (!_should_finish_before_exit) {
             clear();
         }
-        
+
         //wake all threads
         _running = false;
         _cv.notify_all();
-        
+
         //join all threads
         for (auto&& thrd: _workers) {
             if(thrd.joinable()){
@@ -58,22 +52,22 @@ public:
             }
         }
     }
-    
+
     //non moveable
     basic_thread_pool(basic_thread_pool&&) = delete;
     basic_thread_pool& operator=(basic_thread_pool&&)= delete;
-    
+
     //non copyable
     basic_thread_pool(basic_thread_pool&)=delete;
     basic_thread_pool& operator=(basic_thread_pool&)=delete;
-    
+
     //number of workers
     const size_type size()
     {
         std::unique_lock<std::mutex> lk{_workers_mutex};
         return _workers.size();
     }
-    
+
     //resize number of workers
     void resize(size_type const& new_size)
     {
@@ -96,17 +90,17 @@ public:
             _cv.notify_all();//end idle
         }
         //else no change needed
-        
+
     }
-    
+
     //clear all work
     void clear()
     {
         std::unique_lock<std::mutex> lk{_work_mutex};
         _work.clear();
     }
-    
-    
+
+
     //push a function onto the pool
     template<typename func,typename... args_t>
     auto push(func && f, args_t&&... args) -> std::future<decltype(f(args...))>
@@ -120,12 +114,12 @@ public:
             });
         }
         _cv.notify_one();
-        
+
         return pk->get_future();
     }
-    
-    
-    
+
+
+
     //find out if the pool is set to finish work before exit
     bool will_finish_work_before_exit() const{
         return _should_finish_before_exit;
@@ -134,27 +128,27 @@ public:
     void will_finish_work_before_exit(bool const& value){
         _should_finish_before_exit = value;
     }
-    
+
 protected:
-    
+
     std::vector<std::thread> _workers;
-    
+
     std::condition_variable _cv;
-    
+
     std::mutex _work_mutex;
-    
+
     std::mutex _workers_mutex;
-    
+
     queue_type _work;
-    
+
     std::atomic_bool _should_finish_before_exit;//do we need to finish all work before workers exit
     std::atomic_bool _running;//is the thread pool active
     std::atomic_bool _forced_idle;//should all threads run as idle
-    
-    
+
+
     function_wrapper_type thread_init(){
         return [this](){
-            
+
             while (_running || _should_finish_before_exit)
             {
                 std::unique_lock<std::mutex> lk{_work_mutex};
@@ -163,7 +157,7 @@ protected:
                 });
                 //if we are not idle
                 if (!_forced_idle) {
-                    
+
                     //if the pool is not still running
                     if (!_running)
                     {
@@ -192,7 +186,7 @@ protected:
                                 break;
                             }
                         }
-                        //dont have to finish work before exit 
+                        //dont have to finish work before exit
                         else
                         {
                             lk.unlock();
@@ -215,7 +209,7 @@ protected:
             }
         };
     }
-    
+
 };
 
 
