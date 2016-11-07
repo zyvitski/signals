@@ -2,26 +2,27 @@ sudo: required
 dist: xenial
 language: cpp
 
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
+cache:
+  matrix:
+    include:
+      - compiler: gcc
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+            packages:
+              - g++-5
+        env: COMPILER=g++-5
 
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-xenial-3.7
-          packages:
-            - clang-3.7
-      env: COMPILER=clang++-3.7
+      - compiler: clang
+        addons:
+          apt:
+            sources:
+              - ubuntu-toolchain-r-test
+              - llvm-toolchain-xenial-3.7
+            packages:
+              - clang-3.7
+        env: COMPILER=clang++-3.7
 
 before_install:
   - sudo apt-get update -qq
