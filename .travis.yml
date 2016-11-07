@@ -26,6 +26,6 @@ matrix:
 before_install:
   - sudo apt-get update -qq
   - git clone https://github.com/zyvitski/thread_pool_cpp.git thread_pool
-  - cp -v thread_pool/thread_pool.hpp
+  - cp -v thread_pool/thread_pool.hpp thread_pool.hpp
 script:
   - make
