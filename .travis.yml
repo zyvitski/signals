@@ -1,5 +1,5 @@
 sudo: required
-dist: precise
+dist: xenial
 language: cpp
 
 matrix:
@@ -18,7 +18,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-xenial-3.7
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
