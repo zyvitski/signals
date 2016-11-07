@@ -29,4 +29,4 @@ before_install:
   - cd thread_pool
   - make install
 script:
-  - make 
+  - make CXX = $COMPILER
