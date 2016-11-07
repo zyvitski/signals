@@ -2,13 +2,14 @@ PROGRAM_NAME =signals
 CC = clang
 CXX = clang++
 RM = rm -f
+CP = cp -f
 
 CXXFLAGS = --std=c++11 -g -O3 -pthread -MMD -MP -Wall -pedantic
 CPPFLAGS = -I/usr/local/include
 LDFLAGS = -L/usr/local/lib
 LDLIBS =
 
-INSTALL_DIR = /usr/local/bin
+INSTALL_DIR = /usr/local/include
 
 HEADERS = $(wildcard *.hpp)
 SRCS = $(wildcard *.cpp)
@@ -21,15 +22,15 @@ $(PROGRAM_NAME):$(OBJS)
 		$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 -include $(DEPS)
-	
+
 clean:
 		$(RM) $(OBJS) $(PROGRAM_NAME) $(DEPS)
 
 install:
-		cp  $(PROGRAM_NAME) $(INSTALL_DIR)
+		sudo $(CP) $(HEADERS) $(INSTALL_DIR)
 
 uninstall:
-		$(RM) $(INSTALL_DIR)/$(PROGRAM_NAME)
+		$(RM) $(INSTALL_DIR)/$(HEADERS)
 
 dist-clean: clean
 		$(RM) *~  $(DEPS)
