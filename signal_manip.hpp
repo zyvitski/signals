@@ -5,7 +5,7 @@
 
 #include <utility>
 #include <vector>
-#include <thread_pool.hpp>
+#include <load_balancing_thread_pool.hpp>
 
 namespace signals {
 

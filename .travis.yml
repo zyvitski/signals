@@ -2,6 +2,7 @@ sudo: required
 dist: xenial
 language: cpp
 
+
 matrix:
   include:
     - compiler: gcc
@@ -18,11 +19,12 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-xenial-3.7
+            - llvm-toolchain-xenial-3.9
           packages:
             - clang-3.7
-      env: COMPILER=clang++-3.7
-
+      env: COMPILER=clang++-3.9
+cache:
+  -apt
 before_install:
   - sudo apt-get update -qq
   - git clone https://github.com/zyvitski/thread_pool_cpp.git thread_pool
