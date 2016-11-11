@@ -1,5 +1,5 @@
-#ifndef __property_hpp__
-#define __property_hpp__
+#ifndef _property_hpp_
+#define _property_hpp_
 
 #include <signal.hpp>
 
