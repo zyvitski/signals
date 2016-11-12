@@ -39,4 +39,25 @@ public:
     }
 };
 
+template<typename T>
+class value_property : public property<T>
+{
+public:
+    using base_type = property<T>;
+    using set_slot_t = typename base_type::set_slot_t;
+    using get_slot_t = typename base_type::get_slot_t;
+    value_property():base_type(std::bind(&value_property<T>::_set,this,std::placeholders::_1),std::bind(&value_property<T>::_get,this)){}
+    value_property(set_slot_t&& setter, get_slot_t&& getter):base_type(std::forward<set_slot_t&&>(setter),std::forward<get_slot_t&&>(getter)){}
+    using base_type::operator T;
+    using base_type::operator=;
+private:
+    T value;
+    void _set(T v){
+        value =v;
+    }
+    T _get(){
+        return value;
+    }
+};
+
 #endif
