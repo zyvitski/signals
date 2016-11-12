@@ -1,3 +1,4 @@
 *.d
 *.o
 signals
+.clang_complete

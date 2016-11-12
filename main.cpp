@@ -7,19 +7,9 @@
 #include <numeric>
 
 int main(int argc, const char * argv[]) {
-    int i=0;
-
-    property<int> prop
-    {
-        [&](int val){
-            i=val;
-        },
-        [&](){
-            return i;
-        }
-    };
-
+    value_property<int> prop;
     prop = 8;
-    std::cout<<prop<<std::endl;
+    value_property<int> p = prop;
+    std::cout<<p<<std::endl;
     return 0;
 }
