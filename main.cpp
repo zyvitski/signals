@@ -2,11 +2,12 @@
 #include "property.hpp"
 #include <iostream>
 #include <numeric>
+#include <thread_pool.hpp>
 
 int main(int argc, const char * argv[]) {
-    value_property<int> prop;
-    prop = 8;
-    value_property<int> p = prop;
-    std::cout<<p<<std::endl;
+    thread_pool pool;
+
+    signals::signal_t<void()> sig;
+    signals::emit(sig,pool);
     return 0;
 }

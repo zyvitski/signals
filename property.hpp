@@ -10,8 +10,8 @@ private:
     signals::signal_t<void(T)> _set;
     signals::signal_t<T()> _get;
 public:
-    using set_slot_t = typename decltype(_set)::slot_t;
-    using get_slot_t = typename decltype(_get)::slot_t;
+    using set_slot_t = typename signals::signal_t<void(T)>::slot_t;
+    using get_slot_t = typename signals::signal_t<T()>::slot_t;
     property(){}
     property(set_slot_t&& setter, get_slot_t&& getter)
     {
@@ -47,7 +47,7 @@ public:
         _set.disconnect_all();
         signals::connect(_set,std::forward<set_slot_t&&>(action));
     }
-    void on_get(typename decltype(_get)::slot_t&& action)
+    void on_get(get_slot_t&& action)
     {
         _get.disconnect_all();
         signals::connect(_get,std::forward<get_slot_t&&>(action));
