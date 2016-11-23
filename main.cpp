@@ -1,6 +1,3 @@
-
-
-
 #include "signal.hpp"
 #include "property.hpp"
 #include <iostream>

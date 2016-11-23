@@ -52,7 +52,7 @@ public:
     using base_type::operator=;
 private:
     T value;
-    void _set(T v){
+    void _set(T&& v){
         value =v;
     }
     T _get(){
