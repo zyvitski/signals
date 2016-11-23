@@ -5,7 +5,7 @@
 
 #include <utility>
 #include <vector>
-#include <thread_pool.hpp>
+#include <future>
 
 namespace signals {
 
@@ -34,24 +34,6 @@ namespace signals {
     {
         return const_cast<s_t&>(sig).emit(target,std::forward<args_t&&>(args)...);
     }
-
-    template<typename s_t, typename... args_t>
-    auto emit(s_t const& sig,thread_pool const& pool, args_t&&... args) ->decltype(std::declval<s_t>().emit(std::declval<thread_pool>(),
-                                                                                                            std::declval<args_t>()...))
-    {
-        return const_cast<s_t&>(sig).emit(pool,std::forward<args_t&&>(args)...);
-    }
-
-    template<typename s_t, typename s_id_t,typename... args_t>
-    auto emit(s_t const& sig,thread_pool const& pool,  s_id_t const& target, args_t&&...args) ->decltype(std::declval<s_t>().emit(std::declval<s_t>(),
-                                                                                                                                  std::declval<thread_pool>(),
-                                                                                                                                  std::declval<args_t>()...))
-    {
-        return const_cast<s_t&>(sig).emit(target,pool,std::forward<args_t&&>(args)...);
-    }
-
-
-
 
     template<typename T,typename sid_t>
     T result(sid_t&& sid,std::vector<std::future<T>>&& v){

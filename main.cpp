@@ -7,7 +7,11 @@
 int main(int argc, const char * argv[]) {
     thread_pool pool;
 
-    signals::signal_t<void()> sig;
-    signals::emit(sig,pool);
+    signals::signal_t<int(int)> sig;
+    signals::connect(sig,[](int i){
+        return i;
+    });
+    auto&& result = signals::result(0,signals::emit(sig,pool,0));
+    std::cout<<result<<std::endl;
     return 0;
 }
