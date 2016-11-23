@@ -21,10 +21,11 @@ public:
     property(const property& other):_set(other._set),_get(other._get){}
     property(property&& other):_set(std::move(other._set)),_get(std::move(other._get)){}
 
-    property& operator=(property other)
+    property& operator=(property const& other)
     {
-        std::swap(_set,other._set);
-        std::swap(_get,other._get);
+        property o(other);
+        std::swap(_set,o._set);
+        std::swap(_get,o._get);
         return *this;
     }
     property& operator=(property&& other)
