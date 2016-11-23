@@ -19,8 +19,8 @@ public:
         signals::connect(_get,std::forward<get_slot_t&&>(getter));
     }
     property(const property& other):_set(other._set),_get(other._get){}
-    property(property&& other):_set(other._set),_get(other._get){}
-    
+    property(property&& other):_set(std::move(other._set)),_get(std::move(other._get)){}
+
     property& operator=(property other)
     {
         std::swap(_set,other._set);
