@@ -82,7 +82,7 @@ public:
 
     using base_type::operator T;
     using base_type::operator=;
-private:
+protected:
     T value;
     void _set(const T& v){
         value =v;
