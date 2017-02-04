@@ -67,9 +67,19 @@ public:
     using get_slot_t = typename base_type::get_slot_t;
     using set_signal_t = typename base_type::set_signal_t;
     using get_signal_t = typename base_type::get_signal_t;
-    value_property():base_type(std::bind(&value_property<T>::_set,this,std::placeholders::_1),std::bind(&value_property<T>::_get,this)),value(){}
-    value_property(set_slot_t&& setter, get_slot_t&& getter):base_type(std::forward<set_slot_t&&>(setter),std::forward<get_slot_t&&>(getter)),value(){}
-    value_property(set_signal_t&& setter, get_signal_t&& getter):base_type(std::forward<set_signal_t&&>(setter),std::forward<get_signal_t&>(getter)),value(){}
+
+    value_property():base_type(std::bind(&value_property<T>::_set,this,std::placeholders::_1),
+                               std::bind(&value_property<T>::_get,this)),
+                               value(){}
+    value_property(set_slot_t&& setter,
+                   get_slot_t&& getter):base_type(std::forward<set_slot_t&&>(setter),
+                                                  std::forward<get_slot_t&&>(getter)),
+                                                  value(){}
+    value_property(set_signal_t&& setter,
+                   get_signal_t&& getter):base_type(std::forward<set_signal_t&&>(setter),
+                                                    std::forward<get_signal_t&>(getter)),
+                                                    value(){}
+
     using base_type::operator T;
     using base_type::operator=;
 private:
