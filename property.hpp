@@ -7,10 +7,10 @@ template<typename T>
 class property
 {
 private:
-    signals::signal_t<void(T)> _set;
+    signals::signal_t<void(const T&)> _set;
     signals::signal_t<T()> _get;
 public:
-    using set_slot_t = typename signals::signal_t<void(T)>::slot_t;
+    using set_slot_t = typename signals::signal_t<void(const T&)>::slot_t;
     using get_slot_t = typename signals::signal_t<T()>::slot_t;
     property(){}
     property(set_slot_t&& setter, get_slot_t&& getter)
@@ -18,6 +18,8 @@ public:
         signals::connect(_set,std::forward<set_slot_t&&>(setter));
         signals::connect(_get,std::forward<get_slot_t&&>(getter));
     }
+    property(signals::signal_t<void(const T&)>&& setter,signals::signal_t<T()> getter):_set(setter),_get(getter)
+    {}
     property(const property& other):_set(other._set),_get(other._get){}
     property(property&& other):_set(std::move(other._set)),_get(std::move(other._get)){}
 
@@ -34,7 +36,7 @@ public:
         _get = std::move(other._get);
         return *this;
     }
-    property& operator=(T value)
+    property& operator=(const T& value)
     {
         signals::emit(_set,value);
         return *this;
