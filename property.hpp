@@ -37,7 +37,7 @@ public:
         _get = std::move(other._get);
         return *this;
     }
-    property& operator=(const T& value)
+    property& operator()(const T& value)
     {
         signals::emit(_set,value);
         return *this;
@@ -81,7 +81,7 @@ public:
                                                     value(){}
 
     using base_type::operator T;
-    using base_type::operator=;
+    using base_type::operator();
 protected:
     T value;
     void _set(const T& v){

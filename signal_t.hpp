@@ -12,9 +12,55 @@
 #include <mutex>
 #include <type_traits>
 
+    template <size_t... Ints>
+    struct index_sequence
+    {
+        using type = index_sequence;
+        using value_type = size_t;
+        static constexpr std::size_t size() noexcept { return sizeof...(Ints); }
+    };
+
+    // --------------------------------------------------------------
+
+    template <class Sequence1, class Sequence2>
+    struct _merge_and_renumber;
+
+    template <size_t... I1, size_t... I2>
+    struct _merge_and_renumber<index_sequence<I1...>, index_sequence<I2...>>
+      : index_sequence<I1..., (sizeof...(I1)+I2)...>
+    { };
+
+    // --------------------------------------------------------------
+
+    template <size_t N>
+    struct make_index_sequence
+      : _merge_and_renumber<typename make_index_sequence<N/2>::type,
+                            typename make_index_sequence<N - N/2>::type>
+    { };
+
+    template<> struct make_index_sequence<0> : index_sequence<> { };
+    template<> struct make_index_sequence<1> : index_sequence<0> { };
+
+template<int> // begin with 0 here!
+struct placeholder_template
+{};
+
+namespace std
+{
+    template<std::size_t N>
+    struct is_placeholder< placeholder_template<N> >
+        : integral_constant<std::size_t, N+1> // the one is important
+    {};
+}
+
+
+
+
 namespace signals{
 
     namespace{
+
+
 
         template <typename... slot_signiture_t>
         class signal_base;
@@ -27,11 +73,11 @@ namespace signals{
             using slot_t = std::function<return_t(args_t...)>;
             using slot_id_t = std::size_t;
 
-            signal_base()   :_current_id(0){}
+            signal_base():_current_id(0){}
 
-            signal_base(signal_base const& other)   :_slots(other._slots),_current_id(other._current_id){}
+            signal_base(signal_base const& other):_slots(other._slots),_current_id(other._current_id){}
 
-            signal_base(signal_base&& other)   :_slots(),_current_id(0)
+            signal_base(signal_base&& other):_slots(),_current_id(0)
             {
                 std::swap(_slots,other._slots);
                 std::swap(_current_id,other._current_id);
@@ -53,7 +99,6 @@ namespace signals{
                 }
                 return *this;
             }
-
             slot_id_t connect(slot_t const& slot)
             {
                 slot_id_t out;
@@ -64,6 +109,27 @@ namespace signals{
                 }
                 return out;
             }
+            template<typename F,typename... a_t>
+            slot_id_t attach(F&& f, a_t&&... args)
+            {
+                return connect([&](args_t... a)
+                {
+                    return f(args...,a...);
+                });
+            }
+            /*
+            template<typename F, std::size_t... I, typename... a_t>
+            slot_id_t attach( index_sequence<I...> seq,F&& f, a_t&&... args)
+            {
+                return connect(std::bind(&f,std::ref(args)..., placeholder_template<I>{}...));
+            }
+            template<typename F, typename... a_t>
+            slot_id_t attach(F&& f, a_t&&... args)
+            {
+                return attach( make_index_sequence<sizeof...(args_t)>{},std::forward<F&&>(f),std::forward<a_t&&>(args)...);
+            }*/
+
+
 
             slot_t disconnect(slot_id_t const& id)
             {
@@ -129,6 +195,7 @@ namespace signals{
         using base_type::base_type;
         using base_type::operator=;
         using base_type::connect;
+        using base_type::attach;
         using base_type::disconnect;
         using base_type::disconnect_all;
         using base_type::emit;
