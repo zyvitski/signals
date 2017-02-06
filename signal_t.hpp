@@ -12,48 +12,6 @@
 #include <mutex>
 #include <type_traits>
 
-    template <size_t... Ints>
-    struct index_sequence
-    {
-        using type = index_sequence;
-        using value_type = size_t;
-        static constexpr std::size_t size() noexcept { return sizeof...(Ints); }
-    };
-
-    // --------------------------------------------------------------
-
-    template <class Sequence1, class Sequence2>
-    struct _merge_and_renumber;
-
-    template <size_t... I1, size_t... I2>
-    struct _merge_and_renumber<index_sequence<I1...>, index_sequence<I2...>>
-      : index_sequence<I1..., (sizeof...(I1)+I2)...>
-    { };
-
-    // --------------------------------------------------------------
-
-    template <size_t N>
-    struct make_index_sequence
-      : _merge_and_renumber<typename make_index_sequence<N/2>::type,
-                            typename make_index_sequence<N - N/2>::type>
-    { };
-
-    template<> struct make_index_sequence<0> : index_sequence<> { };
-    template<> struct make_index_sequence<1> : index_sequence<0> { };
-
-template<int> // begin with 0 here!
-struct placeholder_template
-{};
-
-namespace std
-{
-    template<std::size_t N>
-    struct is_placeholder< placeholder_template<N> >
-        : integral_constant<std::size_t, N+1> // the one is important
-    {};
-}
-
-
 
 
 namespace signals{
@@ -117,17 +75,6 @@ namespace signals{
                     return f(args...,a...);
                 });
             }
-            /*
-            template<typename F, std::size_t... I, typename... a_t>
-            slot_id_t attach( index_sequence<I...> seq,F&& f, a_t&&... args)
-            {
-                return connect(std::bind(&f,std::ref(args)..., placeholder_template<I>{}...));
-            }
-            template<typename F, typename... a_t>
-            slot_id_t attach(F&& f, a_t&&... args)
-            {
-                return attach( make_index_sequence<sizeof...(args_t)>{},std::forward<F&&>(f),std::forward<a_t&&>(args)...);
-            }*/
 
 
 
