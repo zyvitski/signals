@@ -161,6 +161,14 @@ namespace signals{
             std::unique_lock<std::mutex> lk{_slots_mtx};
             _slots[target](p...);
         }
+        void operator()(args_t...p)
+        {
+            emit(p...);
+        }
+        void operator()(slot_id_t target, args_t... p)
+        {
+            emit(target,p...);
+        }
     protected:
         using base_type::_slots;
         using base_type::_current_id;
@@ -206,6 +214,15 @@ namespace signals{
         {
             std::unique_lock<std::mutex> lk{_slots_mtx};
             return _slots[target](p...);
+        }
+
+        return_t operator()(args_t... p)
+        {
+            return emit(p...);
+        }
+        return_t operator()(slot_id_t target, args_t... p)
+        {
+            return emit(target,p...);
         }
 
 
