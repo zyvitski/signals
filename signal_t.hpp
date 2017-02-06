@@ -20,7 +20,7 @@ namespace signals{
 
 
 
-        template <typename... slot_signiture_t>
+        template <typename... slot_signature_t>
         class signal_base;
 
         template <typename return_t,typename... args_t>
@@ -127,7 +127,7 @@ namespace signals{
 
     }
 
-    template <typename... slot_signiture_t>
+    template <typename... slot_signature_t>
     class signal_t;
 
     template <typename... args_t>
